@@ -58,7 +58,7 @@
   "screens": {
     "home": "Home",
     "components": "Components",
-    "articles": "Articles",
+    "articles": "Video",
     "rental": "Rental",
     "profile": "Profile",
     "settings": "Settings",
@@ -86,7 +86,8 @@
   },
   "menu": {
     "started": "Getting Started",
-    "documentation": "Documentation"
+    "documentation": "Documentation",
+    "logout": "Sign out"
   },
   "home": {
     "title": "Soft UI",

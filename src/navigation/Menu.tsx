@@ -84,14 +84,15 @@ const DrawerContent = (
 
   // screen list for Drawer menu
   const screens = [
+    // {name: t('screens.register'), to: 'Register', icon: assets.register},
+    // {name: t('screens.articles'), to: 'Articles', icon: assets.document},
+
     {name: t('screens.home'), to: 'Home', icon: assets.home},
     {name: t('screens.components'), to: 'Components', icon: assets.components},
-    {name: t('screens.articles'), to: 'Articles', icon: assets.document},
-    {name: t('screens.rental'), to: 'Pro', icon: assets.rental},
+    // {name: t('screens.rental'), to: 'Pro', icon: assets.rental},
     {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
-    {name: t('screens.settings'), to: 'Pro', icon: assets.settings},
-    {name: t('screens.register'), to: 'Register', icon: assets.register},
-    {name: t('screens.extra'), to: 'Pro', icon: assets.extras},
+    // {name: t('screens.settings'), to: 'Pro', icon: assets.settings},
+    // {name: t('screens.extra'), to: 'Pro', icon: assets.extras},
   ];
 
   return (
@@ -161,10 +162,10 @@ const DrawerContent = (
           marginVertical={sizes.sm}
           gradient={gradients.menu}
         />
-
+{/* 
         <Text semibold transform="uppercase" opacity={0.5}>
           {t('menu.documentation')}
-        </Text>
+        </Text> */}
 
         <Button
           row
@@ -172,7 +173,7 @@ const DrawerContent = (
           marginTop={sizes.sm}
           marginBottom={sizes.s}
           onPress={() =>
-            handleWebLink('https://github.com/creativetimofficial')
+            navigation.navigate("Register")
           }>
           <Block
             flex={0}
@@ -192,11 +193,11 @@ const DrawerContent = (
             />
           </Block>
           <Text p color={labelColor}>
-            {t('menu.started')}
+            {t('menu.logout')}
           </Text>
         </Button>
 
-        <Block row justify="space-between" marginTop={sizes.sm}>
+        {/* <Block row justify="space-between" marginTop={sizes.sm}>
           <Text color={labelColor}>{t('darkMode')}</Text>
           <Switch
             checked={isDark}
@@ -205,7 +206,7 @@ const DrawerContent = (
               Alert.alert(t('pro.title'), t('pro.alert'));
             }}
           />
-        </Block>
+        </Block> */}
       </Block>
     </DrawerContentScrollView>
   );

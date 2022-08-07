@@ -1,5 +1,6 @@
-import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {Button, TouchableOpacity} from 'react-native';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
 import Block from './Block';
 import Image from './Image';
@@ -11,46 +12,35 @@ const Product = ({image, title, type, linkLabel}: IProduct) => {
   const {t} = useTranslation();
   const {assets, colors, sizes} = useTheme();
 
+  const video = useRef();
+  const [status, setStatus] = useState(null);
+  const [isReady, setisReady] = useState(false);
+  const [quality, setquality] = useState(null);
+  const [error, seterror] = useState(null);
+
   const isHorizontal = type !== 'vertical';
   const CARD_WIDTH = (sizes.width - sizes.padding * 2 - sizes.sm) / 2;
 
+  const onCLick = async () => {
+    console.log(await video.current?.getCurrentTime());
+  };
+
   return (
     <Block
-      card
+      // card
       flex={0}
-      row={isHorizontal}
+      // row={isHorizontal}
       marginBottom={sizes.sm}
-      width={isHorizontal ? CARD_WIDTH * 2 + sizes.sm : CARD_WIDTH}>
-      <Image
-        resizeMode="cover"
-        source={{uri: image}}
-        style={{
-          height: isHorizontal ? 114 : 110,
-          width: !isHorizontal ? '100%' : sizes.width / 2.435,
-        }}
+      width={CARD_WIDTH * 2 + sizes.sm}>
+      <YoutubePlayer
+        ref={video}
+        videoId="mLI_QxszYrU" // The YouTube video ID
+        play={true} // control playback of video with true/false
+        height={300}
       />
-      <Block
-        paddingTop={sizes.s}
-        justify="space-between"
-        paddingLeft={isHorizontal ? sizes.sm : 0}
-        paddingBottom={isHorizontal ? sizes.s : 0}>
-        <Text p marginBottom={sizes.s}>
-          {title}
-        </Text>
-        <TouchableOpacity>
-          <Block row flex={0} align="center">
-            <Text
-              p
-              color={colors.link}
-              semibold
-              size={sizes.linkSize}
-              marginRight={sizes.s}>
-              {linkLabel || t('common.readArticle')}
-            </Text>
-            <Image source={assets.arrow} color={colors.link} />
-          </Block>
-        </TouchableOpacity>
-      </Block>
+      <TouchableOpacity onPress={onCLick}>
+        <Text>asdasd</Text>
+      </TouchableOpacity>
     </Block>
   );
 };

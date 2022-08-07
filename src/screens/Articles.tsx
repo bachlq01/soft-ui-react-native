@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, View} from 'react-native';
+import {Video} from 'expo-av';
 
 import {useData, useTheme} from '../hooks/';
 import {IArticle, ICategory} from '../constants/types';
@@ -11,6 +12,7 @@ const Articles = () => {
   const [articles, setArticles] = useState<IArticle[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const {colors, gradients, sizes} = useTheme();
+  const [status, setStatus] = useState({});
 
   // init articles
   useEffect(() => {
@@ -35,7 +37,7 @@ const Articles = () => {
   return (
     <Block>
       {/* categories list */}
-      <Block color={colors.card} row flex={0} paddingVertical={sizes.padding}>
+      {/* <Block color={colors.card} row flex={0} paddingVertical={sizes.padding}>
         <Block
           scroll
           horizontal
@@ -64,8 +66,16 @@ const Articles = () => {
             );
           })}
         </Block>
-      </Block>
-
+      </Block> */}
+      <View style={{flex: 1}}>
+        <Video
+          style={{flex: 1}}
+          useNativeControls
+          onPlaybackStatusUpdate={setStatus}
+          isLooping
+          source={{uri: 'https://www.youtube.com/watch?v=2qCmRJz3NOE'}}
+        />
+      </View>
       <FlatList
         data={articles}
         showsVerticalScrollIndicator={false}

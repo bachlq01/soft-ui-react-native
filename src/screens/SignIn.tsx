@@ -2,9 +2,9 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Linking, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 
-import {useData, useTheme, useTranslation} from '../hooks/';
+import {useData, useTheme, useTranslation} from '../hooks';
 import * as regex from '../constants/regex';
-import {Block, Button, Input, Image, Text, Checkbox} from '../components/';
+import {Block, Button, Input, Image, Text, Checkbox} from '../components';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -93,7 +93,7 @@ const Register = () => {
             </Button> */}
 
             <Text h4 center white marginBottom={sizes.md}>
-              {t('register.title')}
+              Signin with
             </Text>
           </Image>
         </Block>
@@ -118,35 +118,8 @@ const Register = () => {
               tint={colors.blurTint}
               paddingVertical={sizes.sm}>
               <Text p semibold center>
-                {t('register.subtitle')}
+                Signin with
               </Text>
-              {/* social buttons */}
-              {/* <Block row center justify="space-evenly" marginVertical={sizes.m}>
-                <Button outlined gray shadow={!isAndroid}>
-                  <Image
-                    source={assets.facebook}
-                    height={sizes.m}
-                    width={sizes.m}
-                    color={isDark ? colors.icon : undefined}
-                  />
-                </Button>
-                <Button outlined gray shadow={!isAndroid}>
-                  <Image
-                    source={assets.apple}
-                    height={sizes.m}
-                    width={sizes.m}
-                    color={isDark ? colors.icon : undefined}
-                  />
-                </Button>
-                <Button outlined gray shadow={!isAndroid}>
-                  <Image
-                    source={assets.google}
-                    height={sizes.m}
-                    width={sizes.m}
-                    color={isDark ? colors.icon : undefined}
-                  />
-                </Button>
-              </Block> */}
               <Block
                 row
                 flex={0}
@@ -179,15 +152,6 @@ const Register = () => {
                 <Input
                   autoCapitalize="none"
                   marginBottom={sizes.m}
-                  label={t('common.name')}
-                  placeholder={t('common.namePlaceholder')}
-                  success={Boolean(registration.name && isValid.name)}
-                  danger={Boolean(registration.name && !isValid.name)}
-                  onChangeText={(value) => handleChange({name: value})}
-                />
-                <Input
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
                   label={t('common.email')}
                   keyboardType="email-address"
                   placeholder={t('common.emailPlaceholder')}
@@ -206,24 +170,6 @@ const Register = () => {
                   danger={Boolean(registration.password && !isValid.password)}
                 />
               </Block>
-              {/* checkbox terms */}
-              <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
-                <Checkbox
-                  marginRight={sizes.sm}
-                  checked={registration?.agreed}
-                  onPress={(value) => handleChange({agreed: value})}
-                />
-                <Text paddingRight={sizes.s}>
-                  {t('common.agree')}
-                  <Text
-                    semibold
-                    onPress={() => {
-                      Linking.openURL('https://www.creative-tim.com/terms');
-                    }}>
-                    {t('common.terms')}
-                  </Text>
-                </Text>
-              </Block>
               <Button
                 onPress={handleSignUp}
                 marginVertical={sizes.s}
@@ -240,9 +186,9 @@ const Register = () => {
                 shadow={!isAndroid}
                 marginVertical={sizes.s}
                 marginHorizontal={sizes.sm}
-                onPress={() => navigation.navigate('Signin')}>
+                onPress={() => navigation.navigate('Register')}>
                 <Text bold primary transform="uppercase">
-                  {t('common.signin')}
+                  Register
                 </Text>
               </Button>
             </Block>

@@ -107,7 +107,7 @@ export const FOLLOWING: IProduct[] = [
   {
     id: 4,
     type: 'vertical',
-    title: 'Get more followers and grow.',
+    title: 'Get more followers and grow.asdasd',
     image:
       'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?fit=crop&w=450&q=80',
   },
@@ -236,7 +236,7 @@ export const OFFERS: IProduct[] = [
   {
     id: 3,
     type: 'vertical',
-    title: 'Get more followers and grow.',
+    title: 'Get more followers and grow.dasdasdasd',
     image:
       'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?fit=crop&w=450&q=80',
   },
@@ -260,7 +260,7 @@ export const LOCATIONS: ILocation[] = [
 export const ARTICLES: IArticle[] = [
   {
     id: 1,
-    title: 'Flexible office space means growth.',
+    title: 'Flexible office space means growth. asdasd',
     description:
       'Rather than worrying about switching offices every couple years, you can instead stay in the same location.',
     category: CATEGORIES[0],
