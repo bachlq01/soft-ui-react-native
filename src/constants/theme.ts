@@ -101,6 +101,7 @@ export const ASSETS: ThemeAssets = {
   carousel1: require('../assets/images/carousel1.png'),
 
   // avatars
+  avatar: require('../assets/images/avatar.png'),
   avatar1: require('../assets/images/avatar1.png'),
   avatar2: require('../assets/images/avatar2.png'),
 

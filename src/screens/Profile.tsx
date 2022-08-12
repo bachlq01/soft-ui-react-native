@@ -1,5 +1,5 @@
-import React, {useCallback} from 'react';
-import {Platform, Linking} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Platform, Linking, AsyncStorage, LogBox} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/core';
 
@@ -9,6 +9,7 @@ import {useData, useTheme, useTranslation} from '../hooks/';
 const isAndroid = Platform.OS === 'android';
 
 const Profile = () => {
+  const [data, setDAta] = useState();
   const {user} = useData();
   const {t} = useTranslation();
   const navigation = useNavigation();
@@ -37,8 +38,27 @@ const Profile = () => {
     [user],
   );
 
+  useEffect(() => {
+    AsyncStorage.getItem('uid').then((uid) => {
+      fetch('https://us-central1-babu-33902.cloudfunctions.net/getUser', {
+        method: 'POST',
+        credentials: 'same-origin',
+        mode: 'same-origin',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({uid}),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          setDAta(res.message);
+        });
+    });
+  }, []);
+
   return (
-    <Block safe marginTop={sizes.md}>
+    <Block safe marginTop={sizes.md} style={{backgroundColor: '#191919'}}>
       <Block
         scroll
         paddingHorizontal={sizes.s}
@@ -49,7 +69,7 @@ const Profile = () => {
             background
             resizeMode="cover"
             padding={sizes.sm}
-            paddingBottom={sizes.l}
+            paddingBottom={50}
             radius={sizes.cardRadius}
             source={assets.background}>
             <Button
@@ -74,59 +94,11 @@ const Profile = () => {
                 width={64}
                 height={64}
                 marginBottom={sizes.sm}
-                source={{uri: user?.avatar}}
+                source={assets.avatar}
               />
               <Text h5 center white>
-                {user?.name}
+                {data?.name}
               </Text>
-              <Text p center white>
-                {user?.department}
-              </Text>
-              <Block row marginVertical={sizes.m}>
-                <Button
-                  white
-                  outlined
-                  shadow={false}
-                  radius={sizes.m}
-                  onPress={() => {
-                    alert(`Follow ${user?.name}`);
-                  }}>
-                  <Block
-                    justify="center"
-                    radius={sizes.m}
-                    paddingHorizontal={sizes.m}
-                    color="rgba(255,255,255,0.2)">
-                    <Text white bold transform="uppercase">
-                      {t('common.follow')}
-                    </Text>
-                  </Block>
-                </Button>
-                <Button
-                  shadow={false}
-                  radius={sizes.m}
-                  marginHorizontal={sizes.sm}
-                  color="rgba(255,255,255,0.2)"
-                  outlined={String(colors.white)}
-                  onPress={() => handleSocialLink('twitter')}>
-                  <Ionicons
-                    size={18}
-                    name="logo-twitter"
-                    color={colors.white}
-                  />
-                </Button>
-                <Button
-                  shadow={false}
-                  radius={sizes.m}
-                  color="rgba(255,255,255,0.2)"
-                  outlined={String(colors.white)}
-                  onPress={() => handleSocialLink('dribbble')}>
-                  <Ionicons
-                    size={18}
-                    name="logo-dribbble"
-                    color={colors.white}
-                  />
-                </Button>
-              </Block>
             </Block>
           </Image>
 
@@ -150,72 +122,20 @@ const Profile = () => {
               paddingVertical={sizes.sm}
               renderToHardwareTextureAndroid>
               <Block align="center">
-                <Text h5>{user?.stats?.posts}</Text>
-                <Text>{t('profile.posts')}</Text>
+                <Text h5>Balance: {data?.balance || 0}</Text>
               </Block>
-              <Block align="center">
+              {/* <Block align="center">
                 <Text h5>{(user?.stats?.followers || 0) / 1000}k</Text>
                 <Text>{t('profile.followers')}</Text>
               </Block>
               <Block align="center">
                 <Text h5>{(user?.stats?.following || 0) / 1000}k</Text>
                 <Text>{t('profile.following')}</Text>
-              </Block>
+              </Block> */}
             </Block>
           </Block>
 
           {/* profile: about me */}
-          <Block paddingHorizontal={sizes.sm}>
-            <Text h5 semibold marginBottom={sizes.s} marginTop={sizes.sm}>
-              {t('profile.aboutMe')}
-            </Text>
-            <Text p lineHeight={26}>
-              {user?.about}
-            </Text>
-          </Block>
-
-          {/* profile: photo album */}
-          <Block paddingHorizontal={sizes.sm} marginTop={sizes.s}>
-            <Block row align="center" justify="space-between">
-              <Text h5 semibold>
-                {t('common.album')}
-              </Text>
-              <Button>
-                <Text p primary semibold>
-                  {t('common.viewall')}
-                </Text>
-              </Button>
-            </Block>
-            <Block row justify="space-between" wrap="wrap">
-              <Image
-                resizeMode="cover"
-                source={assets?.photo1}
-                style={{
-                  width: IMAGE_VERTICAL_SIZE + IMAGE_MARGIN / 2,
-                  height: IMAGE_VERTICAL_SIZE * 2 + IMAGE_VERTICAL_MARGIN,
-                }}
-              />
-              <Block marginLeft={sizes.m}>
-                <Image
-                  resizeMode="cover"
-                  source={assets?.photo2}
-                  marginBottom={IMAGE_VERTICAL_MARGIN}
-                  style={{
-                    height: IMAGE_VERTICAL_SIZE,
-                    width: IMAGE_VERTICAL_SIZE,
-                  }}
-                />
-                <Image
-                  resizeMode="cover"
-                  source={assets?.photo3}
-                  style={{
-                    height: IMAGE_VERTICAL_SIZE,
-                    width: IMAGE_VERTICAL_SIZE,
-                  }}
-                />
-              </Block>
-            </Block>
-          </Block>
         </Block>
       </Block>
     </Block>

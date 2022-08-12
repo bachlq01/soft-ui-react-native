@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Linking, Platform} from 'react-native';
+import {ActivityIndicator, Alert, AsyncStorage, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 
 import {useData, useTheme, useTranslation} from '../hooks';
@@ -25,17 +25,18 @@ const Register = () => {
   const {isDark} = useData();
   const {t} = useTranslation();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const [isValid, setIsValid] = useState<IRegistrationValidation>({
     name: false,
     email: false,
     password: false,
-    agreed: false,
+    agreed: true,
   });
   const [registration, setRegistration] = useState<IRegistration>({
     name: '',
     email: '',
     password: '',
-    agreed: false,
+    agreed: true,
   });
   const {assets, colors, gradients, sizes} = useTheme();
 
@@ -47,56 +48,51 @@ const Register = () => {
   );
 
   const handleSignUp = useCallback(() => {
+    /** send/save registratin data */
     if (!Object.values(isValid).includes(false)) {
-      /** send/save registratin data */
-      console.log('handleSignUp', registration);
+      setLoading(true);
+      const {email, password} = registration;
+      fetch('https://us-central1-babu-33902.cloudfunctions.net/login', {
+        method: 'POST',
+        credentials: 'same-origin',
+        mode: 'same-origin',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email, password}),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res);
+          if (res.status) {
+            setLoading(false);
+            AsyncStorage.setItem('uid', res.message.email);
+            setRegistration({
+              name: '',
+              email: '',
+              password: '',
+              agreed: true,
+            });
+            navigation.navigate('Home');
+          }
+        });
     }
+    setLoading(false);
   }, [isValid, registration]);
 
   useEffect(() => {
     setIsValid((state) => ({
       ...state,
-      name: regex.name.test(registration.name),
+      name: true,
       email: regex.email.test(registration.email),
-      password: regex.password.test(registration.password),
-      agreed: registration.agreed,
+      password: registration.password.length >= 6,
     }));
   }, [registration, setIsValid]);
 
   return (
-    <Block safe marginTop={sizes.md}>
+    <Block safe paddingTop={200} style={{backgroundColor: "#202020"}}>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{zIndex: 0}}>
-          <Image
-            background
-            resizeMode="cover"
-            padding={sizes.sm}
-            radius={sizes.cardRadius}
-            source={assets.background}
-            height={sizes.height * 0.3}>
-            {/* <Button
-              row
-              flex={0}
-              justify="flex-start"
-              onPress={() => navigation.goBack()}>
-              <Image
-                radius={0}
-                width={10}
-                height={18}
-                color={colors.white}
-                source={assets.arrow}
-                transform={[{rotate: '180deg'}]}
-              />
-              <Text p white marginLeft={sizes.s}>
-                {t('common.goBack')}
-              </Text>
-            </Button> */}
-
-            <Text h4 center white marginBottom={sizes.md}>
-              Signin with
-            </Text>
-          </Image>
-        </Block>
         {/* register form */}
         <Block
           keyboard
@@ -115,9 +111,9 @@ const Register = () => {
               radius={sizes.sm}
               overflow="hidden"
               justify="space-evenly"
-              tint={colors.blurTint}
+              tint={"light"}
               paddingVertical={sizes.sm}>
-              <Text p semibold center>
+              <Text p semibold center color={"#202020"}>
                 Signin with
               </Text>
               <Block
@@ -152,6 +148,7 @@ const Register = () => {
                 <Input
                   autoCapitalize="none"
                   marginBottom={sizes.m}
+                  
                   label={t('common.email')}
                   keyboardType="email-address"
                   placeholder={t('common.emailPlaceholder')}
@@ -165,21 +162,34 @@ const Register = () => {
                   marginBottom={sizes.m}
                   label={t('common.password')}
                   placeholder={t('common.passwordPlaceholder')}
+                  color={"#ff20f"}
                   onChangeText={(value) => handleChange({password: value})}
                   success={Boolean(registration.password && isValid.password)}
                   danger={Boolean(registration.password && !isValid.password)}
                 />
               </Block>
-              <Button
-                onPress={handleSignUp}
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                gradient={gradients.primary}
-                disabled={Object.values(isValid).includes(false)}>
-                <Text bold white transform="uppercase">
-                  {t('common.signup')}
-                </Text>
-              </Button>
+              {!loading ? (
+                <Button
+                  onPress={handleSignUp}
+                  marginVertical={sizes.s}
+                  marginHorizontal={sizes.sm}
+                  gradient={gradients.primary}
+                  disabled={Object.values(isValid).includes(false)}
+                >
+                  <Text bold white transform="uppercase">
+                    {t('common.signin')}
+                  </Text>
+                </Button>
+              ) : (
+                <Button
+                  marginVertical={sizes.s}
+                  marginHorizontal={sizes.sm}
+                  // disabled={Object.values(isValid).includes(false)}
+                >
+                  <ActivityIndicator />
+                </Button>
+              )}
+
               <Button
                 primary
                 outlined

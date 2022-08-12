@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Linking, Platform} from 'react-native';
+import {ActivityIndicator, Alert, Linking, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 
 import {useData, useTheme, useTranslation} from '../hooks/';
@@ -25,17 +25,18 @@ const Register = () => {
   const {isDark} = useData();
   const {t} = useTranslation();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const [isValid, setIsValid] = useState<IRegistrationValidation>({
     name: false,
     email: false,
     password: false,
-    agreed: false,
+    agreed: true,
   });
   const [registration, setRegistration] = useState<IRegistration>({
     name: '',
     email: '',
     password: '',
-    agreed: false,
+    agreed: true,
   });
   const {assets, colors, gradients, sizes} = useTheme();
 
@@ -48,9 +49,29 @@ const Register = () => {
 
   const handleSignUp = useCallback(() => {
     if (!Object.values(isValid).includes(false)) {
+      setLoading(true);
       /** send/save registratin data */
-      console.log('handleSignUp', registration);
+      const {email, password, name} = registration;
+      fetch('https://us-central1-babu-33902.cloudfunctions.net/register', {
+        method: 'POST',
+        credentials: 'same-origin',
+        mode: 'same-origin',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email, password, name}),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.status) {
+            setLoading(false);
+            Alert.alert('Register success!');
+            navigation.navigate('Signin');
+          }
+        });
     }
+    setLoading(false);
   }, [isValid, registration]);
 
   useEffect(() => {
@@ -58,45 +79,13 @@ const Register = () => {
       ...state,
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
-      password: regex.password.test(registration.password),
-      agreed: registration.agreed,
+      password: registration.email.length >= 6,
     }));
   }, [registration, setIsValid]);
 
   return (
-    <Block safe marginTop={sizes.md}>
+    <Block safe paddingTop={200} style={{backgroundColor:"#202020"}}>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{zIndex: 0}}>
-          <Image
-            background
-            resizeMode="cover"
-            padding={sizes.sm}
-            radius={sizes.cardRadius}
-            source={assets.background}
-            height={sizes.height * 0.3}>
-            {/* <Button
-              row
-              flex={0}
-              justify="flex-start"
-              onPress={() => navigation.goBack()}>
-              <Image
-                radius={0}
-                width={10}
-                height={18}
-                color={colors.white}
-                source={assets.arrow}
-                transform={[{rotate: '180deg'}]}
-              />
-              <Text p white marginLeft={sizes.s}>
-                {t('common.goBack')}
-              </Text>
-            </Button> */}
-
-            <Text h4 center white marginBottom={sizes.md}>
-              {t('register.title')}
-            </Text>
-          </Image>
-        </Block>
         {/* register form */}
         <Block
           keyboard
@@ -207,7 +196,7 @@ const Register = () => {
                 />
               </Block>
               {/* checkbox terms */}
-              <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
+              {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
                 <Checkbox
                   marginRight={sizes.sm}
                   checked={registration?.agreed}
@@ -223,17 +212,29 @@ const Register = () => {
                     {t('common.terms')}
                   </Text>
                 </Text>
-              </Block>
-              <Button
-                onPress={handleSignUp}
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                gradient={gradients.primary}
-                disabled={Object.values(isValid).includes(false)}>
-                <Text bold white transform="uppercase">
-                  {t('common.signup')}
-                </Text>
-              </Button>
+              </Block> */}
+
+              {!loading ? (
+                <Button
+                  onPress={handleSignUp}
+                  marginVertical={sizes.s}
+                  marginHorizontal={sizes.sm}
+                  gradient={gradients.primary}
+                  disabled={Object.values(isValid).includes(false)}>
+                  <Text bold white transform="uppercase">
+                    {t('common.signup')}
+                  </Text>
+                </Button>
+              ) : (
+                <Button
+                  marginVertical={sizes.s}
+                  marginHorizontal={sizes.sm}
+                  gradient={gradients.primary}
+                  // disabled={Object.values(isValid).includes(false)}
+                >
+                  <ActivityIndicator />
+                </Button>
+              )}
               <Button
                 primary
                 outlined

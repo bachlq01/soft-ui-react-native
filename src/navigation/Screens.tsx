@@ -1,8 +1,17 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {Articles, Components, Home, Profile, Register, Pro, SignIn} from '../screens';
+import {
+  Articles,
+  Components,
+  Home,
+  Profile,
+  Register,
+  Pro,
+  SignIn,
+} from '../screens';
 import {useScreenOptions, useTranslation} from '../hooks';
+import {AsyncStorage} from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -13,11 +22,16 @@ export default () => {
   return (
     <Stack.Navigator screenOptions={screenOptions.stack}>
       <Stack.Screen
+        name="Signin"
+        component={SignIn}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="Register"
         component={Register}
         options={{headerShown: false}}
       />
-      
+
       <Stack.Screen
         name="Home"
         component={Home}
@@ -41,11 +55,6 @@ export default () => {
       <Stack.Screen
         name="Profile"
         component={Profile}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Signin"
-        component={SignIn}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

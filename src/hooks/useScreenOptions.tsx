@@ -24,7 +24,7 @@ export default () => {
   const {icons, colors, gradients, sizes} = useTheme();
 
   const menu = {
-    headerStyle: {elevation: 0},
+    headerStyle: {elevation: 0,backgroundColor:"#202020"},
     headerTitleAlign: 'left',
     headerTitleContainerStyle: {marginLeft: -sizes.sm},
     headerLeftContainerStyle: {paddingLeft: sizes.s},

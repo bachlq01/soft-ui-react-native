@@ -269,6 +269,7 @@ export interface ThemeAssets {
   photo6: ImageSourcePropType;
   carousel1: ImageSourcePropType;
 
+  avatar: ImageSourcePropType
   avatar1: ImageSourcePropType;
   avatar2: ImageSourcePropType;
 
