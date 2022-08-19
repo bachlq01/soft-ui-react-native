@@ -173,7 +173,7 @@ const Register = () => {
                   onPress={handleSignUp}
                   marginVertical={sizes.s}
                   marginHorizontal={sizes.sm}
-                  gradient={gradients.primary}
+                  gradient={gradients.danger}
                   disabled={Object.values(isValid).includes(false)}
                 >
                   <Text bold white transform="uppercase">

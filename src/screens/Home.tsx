@@ -30,7 +30,6 @@ const Home = () => {
       });
   }, []);
 
-  console.log(listId);
   return (
     <Block style={{backgroundColor: '#181818'}}>
       <Block
@@ -39,8 +38,8 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: sizes.l}}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-          {listId?.map((product) => (
-            <Product {...product} key={`card-${product?.id}`} />
+          {listId?.map((product,index) => (
+            <Product key={`card-${product?.id}`} index={index} id={product?.id} listId={listId}/>
           ))}
         </Block>
       </Block>
